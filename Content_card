@@ -1,0 +1,124 @@
+import React from 'react';
+import { Star, Play, Heart, Share2 } from 'lucide-react';
+
+interface ContentCardProps {
+  id: string;
+  title: string;
+  subtitle: string;
+  image: string;
+  rating: number;
+  genre: string;
+  duration?: string;
+  type: 'movie' | 'music' | 'game' | 'live';
+  onPlay: (id: string) => void;
+  onFavorite: (id: string) => void;
+  onShare: (id: string) => void;
+  isFavorited?: boolean;
+}
+
+const ContentCard: React.FC<ContentCardProps> = ({
+  id,
+  title,
+  subtitle,
+  image,
+  rating,
+  genre,
+  duration,
+  type,
+  onPlay,
+  onFavorite,
+  onShare,
+  isFavorited = false,
+}) => {
+  const getTypeColor = () => {
+    switch (type) {
+      case 'movie': return 'from-purple-500 to-pink-500';
+      case 'music': return 'from-teal-500 to-cyan-500';
+      case 'game': return 'from-orange-500 to-red-500';
+      case 'live': return 'from-green-500 to-emerald-500';
+      default: return 'from-gray-500 to-gray-600';
+    }
+  };
+
+  const handlePlay = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onPlay(id);
+  };
+
+  const handleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onFavorite(id);
+  };
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onShare(id);
+  };
+  return (
+    <div className="group relative bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer">
+      {/* Image Container */}
+      <div className="relative h-48 overflow-hidden">
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+        />
+        
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute bottom-4 left-4 right-4">
+            <div className="flex space-x-2">
+              <button 
+                onClick={handlePlay}
+                className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors"
+                title="Play"
+              >
+                <Play className="w-4 h-4" />
+              </button>
+              <button 
+                onClick={handleFavorite}
+                className={`p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors ${
+                  isFavorited ? 'text-red-400' : ''
+                }`}
+                title={isFavorited ? "Remove from favorites" : "Add to favorites"}
+              >
+                <Heart className={`w-4 h-4 ${isFavorited ? 'fill-current' : ''}`} />
+              </button>
+              <button 
+                onClick={handleShare}
+                className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors"
+                title="Share"
+              >
+                <Share2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Type Badge */}
+        <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r ${getTypeColor()}`}>
+          {type.toUpperCase()}
+        </div>
+
+        {/* Rating */}
+        <div className="absolute top-3 right-3 flex items-center space-x-1 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1">
+          <Star className="w-3 h-3 text-yellow-400 fill-current" />
+          <span className="text-white text-xs font-medium">{rating}</span>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-4">
+        <h3 className="font-bold text-gray-900 text-lg mb-1 truncate">{title}</h3>
+        <p className="text-gray-600 text-sm mb-2 truncate">{subtitle}</p>
+        
+        <div className="flex items-center justify-between text-xs text-gray-500">
+          <span className="bg-gray-100 px-2 py-1 rounded-full">{genre}</span>
+          {duration && <span>{duration}</span>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ContentCard;
