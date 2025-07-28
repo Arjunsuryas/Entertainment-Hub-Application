@@ -1,0 +1,94 @@
+import React from 'react';
+import { X, Bell, Star, Heart, MessageCircle } from 'lucide-react';
+
+interface NotificationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const NotificationModal: React.FC<NotificationModalProps> = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
+  const notifications = [
+    {
+      id: 1,
+      type: 'new_release',
+      title: 'New Movie Available',
+      message: 'Dune: Part Two is now streaming',
+      time: '2 hours ago',
+      icon: Star,
+      color: 'text-yellow-500',
+    },
+    {
+      id: 2,
+      type: 'favorite',
+      title: 'Favorite Artist Update',
+      message: 'Taylor Swift released a new album',
+      time: '1 day ago',
+      icon: Heart,
+      color: 'text-red-500',
+    },
+    {
+      id: 3,
+      type: 'comment',
+      title: 'New Review',
+      message: 'Someone commented on your review',
+      time: '3 days ago',
+      icon: MessageCircle,
+      color: 'text-blue-500',
+    },
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center pt-20">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 max-h-[80vh] overflow-hidden">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <div className="flex items-center space-x-2">
+            <Bell className="w-5 h-5 text-teal-600" />
+            <h2 className="text-xl font-bold text-gray-900">Notifications</h2>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <X className="w-5 h-5 text-gray-500" />
+          </button>
+        </div>
+
+        <div className="overflow-y-auto max-h-96">
+          {notifications.map((notification) => (
+            <div
+              key={notification.id}
+              className="p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+            >
+              <div className="flex items-start space-x-3">
+                <div className="flex-shrink-0">
+                  <notification.icon className={`w-5 h-5 ${notification.color}`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900">
+                    {notification.title}
+                  </p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {notification.message}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-2">
+                    {notification.time}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="p-4 border-t border-gray-200">
+          <button className="w-full text-center text-teal-600 hover:text-teal-700 font-medium transition-colors">
+            Mark all as read
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default NotificationModal;
